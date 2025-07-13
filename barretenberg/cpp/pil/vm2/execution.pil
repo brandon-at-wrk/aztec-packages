@@ -97,6 +97,9 @@ last = sel * (1 - sel');
 pol commit bytecode_id;
 pol commit sel_bytecode_retrieval_failure;
 
+// Note: the bytecode_id is a unique identifier for the bytecode, but note that bytecode retrieval
+// may happen multiple times for the same bytecode since nullifier and public data roots will change.
+// Inner gadgets deduplicate instead.
 // TODO(dbanks12): since this lookup is no longer active for all rows,
 // we likely need to constrain that bytecode_id does not change during a context,
 // or we need to otherwise consider the implications of this.
