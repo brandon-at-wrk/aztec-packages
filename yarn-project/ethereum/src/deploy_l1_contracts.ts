@@ -3,53 +3,6 @@ import { EthAddress } from '@aztec/foundation/eth-address';
 import type { Fr } from '@aztec/foundation/fields';
 import { type Logger, createLogger } from '@aztec/foundation/log';
 import { DateProvider } from '@aztec/foundation/timer';
-import {
-  CoinIssuerAbi,
-  CoinIssuerBytecode,
-  ExtRollupLib2Abi,
-  ExtRollupLib2Bytecode,
-  ExtRollupLibAbi,
-  ExtRollupLibBytecode,
-  FeeAssetHandlerAbi,
-  FeeAssetHandlerBytecode,
-  FeeJuicePortalAbi,
-  FeeJuicePortalBytecode,
-  GSEAbi,
-  GSEBytecode,
-  GovernanceAbi,
-  GovernanceBytecode,
-  GovernanceProposerAbi,
-  GovernanceProposerBytecode,
-  HonkVerifierAbi,
-  HonkVerifierBytecode,
-  InboxAbi,
-  InboxBytecode,
-  MockVerifierAbi,
-  MockVerifierBytecode,
-  MockZKPassportVerifierAbi,
-  MockZKPassportVerifierBytecode,
-  MultiAdderAbi,
-  MultiAdderBytecode,
-  OutboxAbi,
-  OutboxBytecode,
-  RegisterNewRollupVersionPayloadAbi,
-  RegisterNewRollupVersionPayloadBytecode,
-  RegistryAbi,
-  RegistryBytecode,
-  RewardDistributorAbi,
-  RewardDistributorBytecode,
-  RollupAbi,
-  RollupBytecode,
-  RollupLinkReferences,
-  SlashFactoryAbi,
-  SlashFactoryBytecode,
-  StakingAssetHandlerAbi,
-  StakingAssetHandlerBytecode,
-  TestERC20Abi,
-  TestERC20Bytecode,
-  ValidatorSelectionLibAbi,
-  ValidatorSelectionLibBytecode,
-} from '@aztec/l1-artifacts';
 
 import type { Abi, Narrow } from 'abitype';
 import {
@@ -80,6 +33,24 @@ import {
 import { deployMulticall3 } from './contracts/multicall.js';
 import { RegistryContract } from './contracts/registry.js';
 import { RollupContract } from './contracts/rollup.js';
+import {
+  CoinIssuerArtifact,
+  FeeAssetArtifact,
+  FeeAssetHandlerArtifact,
+  GSEArtifact,
+  GovernanceArtifact,
+  GovernanceProposerArtifact,
+  MultiAdderArtifact,
+  RegisterNewRollupVersionPayloadArtifact,
+  RegistryArtifact,
+  RewardDistributorArtifact,
+  RollupArtifact,
+  SlashFactoryArtifact,
+  StakingAssetArtifact,
+  StakingAssetHandlerArtifact,
+  l1ArtifactsVerifiers,
+  mockVerifiers,
+} from './l1_artifacts.js';
 import type { L1ContractAddresses } from './l1_contract_addresses.js';
 import {
   type GasPrice,
@@ -145,112 +116,6 @@ export interface ContractArtifacts {
   libraries?: Libraries;
 }
 
-export const l1Artifacts = {
-  registry: {
-    contractAbi: RegistryAbi,
-    contractBytecode: RegistryBytecode as Hex,
-  },
-  inbox: {
-    contractAbi: InboxAbi,
-    contractBytecode: InboxBytecode as Hex,
-  },
-  outbox: {
-    contractAbi: OutboxAbi,
-    contractBytecode: OutboxBytecode as Hex,
-  },
-  rollup: {
-    contractAbi: RollupAbi,
-    contractBytecode: RollupBytecode as Hex,
-    libraries: {
-      linkReferences: RollupLinkReferences,
-      libraryCode: {
-        ValidatorSelectionLib: {
-          contractAbi: ValidatorSelectionLibAbi,
-          contractBytecode: ValidatorSelectionLibBytecode as Hex,
-        },
-        ExtRollupLib: {
-          contractAbi: ExtRollupLibAbi,
-          contractBytecode: ExtRollupLibBytecode as Hex,
-        },
-        ExtRollupLib2: {
-          contractAbi: ExtRollupLib2Abi,
-          contractBytecode: ExtRollupLib2Bytecode as Hex,
-        },
-      },
-    },
-  },
-  stakingAsset: {
-    contractAbi: TestERC20Abi,
-    contractBytecode: TestERC20Bytecode as Hex,
-  },
-  feeAsset: {
-    contractAbi: TestERC20Abi,
-    contractBytecode: TestERC20Bytecode as Hex,
-  },
-  feeJuicePortal: {
-    contractAbi: FeeJuicePortalAbi,
-    contractBytecode: FeeJuicePortalBytecode as Hex,
-  },
-  rewardDistributor: {
-    contractAbi: RewardDistributorAbi,
-    contractBytecode: RewardDistributorBytecode as Hex,
-  },
-  coinIssuer: {
-    contractAbi: CoinIssuerAbi,
-    contractBytecode: CoinIssuerBytecode as Hex,
-  },
-  governanceProposer: {
-    contractAbi: GovernanceProposerAbi,
-    contractBytecode: GovernanceProposerBytecode as Hex,
-  },
-  governance: {
-    contractAbi: GovernanceAbi,
-    contractBytecode: GovernanceBytecode as Hex,
-  },
-  slashFactory: {
-    contractAbi: SlashFactoryAbi,
-    contractBytecode: SlashFactoryBytecode as Hex,
-  },
-  registerNewRollupVersionPayload: {
-    contractAbi: RegisterNewRollupVersionPayloadAbi,
-    contractBytecode: RegisterNewRollupVersionPayloadBytecode as Hex,
-  },
-  feeAssetHandler: {
-    contractAbi: FeeAssetHandlerAbi,
-    contractBytecode: FeeAssetHandlerBytecode as Hex,
-  },
-  stakingAssetHandler: {
-    contractAbi: StakingAssetHandlerAbi,
-    contractBytecode: StakingAssetHandlerBytecode as Hex,
-  },
-  multiAdder: {
-    contractAbi: MultiAdderAbi,
-    contractBytecode: MultiAdderBytecode as Hex,
-  },
-  gse: {
-    contractAbi: GSEAbi,
-    contractBytecode: GSEBytecode as Hex,
-  },
-};
-
-export const l1ArtifactsVerifiers = {
-  honkVerifier: {
-    contractAbi: HonkVerifierAbi,
-    contractBytecode: HonkVerifierBytecode as Hex,
-  },
-};
-
-const mockVerifiers = {
-  mockVerifier: {
-    contractAbi: MockVerifierAbi,
-    contractBytecode: MockVerifierBytecode as Hex,
-  },
-  mockZkPassportVerifier: {
-    contractAbi: MockZKPassportVerifierAbi,
-    contractBytecode: MockZKPassportVerifierBytecode as Hex,
-  },
-};
-
 export interface DeployL1ContractsArgs extends L1ContractsConfig {
   /** The vk tree root. */
   vkTreeRoot: Fr;
@@ -293,33 +158,33 @@ export const deploySharedContracts = async (
 
   const txHashes: Hex[] = [];
 
-  const feeAssetAddress = await deployer.deploy(l1Artifacts.feeAsset, [
+  const feeAssetAddress = await deployer.deploy(FeeAssetArtifact, [
     'FeeJuice',
     'FEE',
     l1Client.account.address.toString(),
   ]);
   logger.verbose(`Deployed Fee Asset at ${feeAssetAddress}`);
 
-  const stakingAssetAddress = await deployer.deploy(l1Artifacts.stakingAsset, [
+  const stakingAssetAddress = await deployer.deploy(StakingAssetArtifact, [
     'Staking',
     'STK',
     l1Client.account.address.toString(),
   ]);
   logger.verbose(`Deployed Staking Asset at ${stakingAssetAddress}`);
 
-  const gseAddress = await deployer.deploy(l1Artifacts.gse, [
+  const gseAddress = await deployer.deploy(GSEArtifact, [
     l1Client.account.address.toString(),
     stakingAssetAddress.toString(),
   ]);
   logger.verbose(`Deployed GSE at ${gseAddress}`);
 
-  const registryAddress = await deployer.deploy(l1Artifacts.registry, [
+  const registryAddress = await deployer.deploy(RegistryArtifact, [
     l1Client.account.address.toString(),
     feeAssetAddress.toString(),
   ]);
   logger.verbose(`Deployed Registry at ${registryAddress}`);
 
-  const governanceProposerAddress = await deployer.deploy(l1Artifacts.governanceProposer, [
+  const governanceProposerAddress = await deployer.deploy(GovernanceProposerArtifact, [
     registryAddress.toString(),
     gseAddress.toString(),
     args.governanceProposerQuorum,
@@ -329,7 +194,7 @@ export const deploySharedContracts = async (
 
   // @note @LHerskind the assets are expected to be the same at some point, but for better
   // configurability they are different for now.
-  const governanceAddress = await deployer.deploy(l1Artifacts.governance, [
+  const governanceAddress = await deployer.deploy(GovernanceArtifact, [
     stakingAssetAddress.toString(),
     governanceProposerAddress.toString(),
     gseAddress.toString(),
@@ -345,7 +210,7 @@ export const deploySharedContracts = async (
   } else {
     const gseContract = getContract({
       address: getAddress(gseAddress.toString()),
-      abi: l1Artifacts.gse.contractAbi,
+      abi: GSEArtifact.contractAbi,
       client: l1Client,
     });
     const existingGovernance = await gseContract.read.getGovernance();
@@ -359,7 +224,7 @@ export const deploySharedContracts = async (
       {
         to: gseAddress.toString(),
         data: encodeFunctionData({
-          abi: l1Artifacts.gse.contractAbi,
+          abi: GSEArtifact.contractAbi,
           functionName: 'setGovernance',
           args: [governanceAddress.toString()],
         }),
@@ -371,7 +236,7 @@ export const deploySharedContracts = async (
     txHashes.push(txHash);
   }
 
-  const coinIssuerAddress = await deployer.deploy(l1Artifacts.coinIssuer, [
+  const coinIssuerAddress = await deployer.deploy(CoinIssuerArtifact, [
     feeAssetAddress.toString(),
     1n * 10n ** 18n, // @todo  #8084
     governanceAddress.toString(),
@@ -380,7 +245,7 @@ export const deploySharedContracts = async (
 
   const feeAsset = getContract({
     address: feeAssetAddress.toString(),
-    abi: l1Artifacts.feeAsset.contractAbi,
+    abi: FeeAssetArtifact.contractAbi,
     client: l1Client,
   });
 
@@ -392,7 +257,7 @@ export const deploySharedContracts = async (
       {
         to: feeAssetAddress.toString(),
         data: encodeFunctionData({
-          abi: l1Artifacts.feeAsset.contractAbi,
+          abi: FeeAssetArtifact.contractAbi,
           functionName: 'addMinter',
           args: [coinIssuerAddress.toString()],
         }),
@@ -415,7 +280,7 @@ export const deploySharedContracts = async (
     /*                          CHEAT CODES START HERE                            */
     /* -------------------------------------------------------------------------- */
 
-    feeAssetHandlerAddress = await deployer.deploy(l1Artifacts.feeAssetHandler, [
+    feeAssetHandlerAddress = await deployer.deploy(FeeAssetHandlerArtifact, [
       l1Client.account.address,
       feeAssetAddress.toString(),
       BigInt(1e18),
@@ -425,7 +290,7 @@ export const deploySharedContracts = async (
     const { txHash } = await deployer.sendTransaction({
       to: feeAssetAddress.toString(),
       data: encodeFunctionData({
-        abi: l1Artifacts.feeAsset.contractAbi,
+        abi: FeeAssetArtifact.contractAbi,
         functionName: 'addMinter',
         args: [feeAssetHandlerAddress.toString()],
       }),
@@ -458,15 +323,13 @@ export const deploySharedContracts = async (
         skipMerkleCheck: true, // skip merkle check - needed for testing without generating proofs
       };
 
-      stakingAssetHandlerAddress = await deployer.deploy(l1Artifacts.stakingAssetHandler, [
-        stakingAssetHandlerDeployArgs,
-      ]);
+      stakingAssetHandlerAddress = await deployer.deploy(StakingAssetHandlerArtifact, [stakingAssetHandlerDeployArgs]);
       logger.verbose(`Deployed StakingAssetHandler at ${stakingAssetHandlerAddress}`);
 
       const { txHash: stakingMinterTxHash } = await deployer.sendTransaction({
         to: stakingAssetAddress.toString(),
         data: encodeFunctionData({
-          abi: l1Artifacts.stakingAsset.contractAbi,
+          abi: StakingAssetArtifact.contractAbi,
           functionName: 'addMinter',
           args: [stakingAssetHandlerAddress.toString()],
         }),
@@ -498,7 +361,7 @@ export const deploySharedContracts = async (
 
   const rewardDistributor = getContract({
     address: rewardDistributorAddress.toString(),
-    abi: l1Artifacts.rewardDistributor.contractAbi,
+    abi: RewardDistributorArtifact.contractAbi,
     client: l1Client,
   });
 
@@ -508,7 +371,7 @@ export const deploySharedContracts = async (
   const { txHash: fundRewardDistributorTxHash } = await deployer.sendTransaction({
     to: feeAssetAddress.toString(),
     data: encodeFunctionData({
-      abi: l1Artifacts.feeAsset.contractAbi,
+      abi: FeeAssetArtifact.contractAbi,
       functionName: 'mint',
       args: [rewardDistributorAddress.toString(), funding],
     }),
@@ -590,7 +453,7 @@ export const deployRollupForUpgrade = async (
 };
 
 export const deploySlashFactory = async (deployer: L1Deployer, rollupAddress: Hex, logger: Logger) => {
-  const slashFactoryAddress = await deployer.deploy(l1Artifacts.slashFactory, [rollupAddress]);
+  const slashFactoryAddress = await deployer.deploy(SlashFactoryArtifact, [rollupAddress]);
   logger.verbose(`Deployed SlashFactory at ${slashFactoryAddress}`);
   return slashFactoryAddress;
 };
@@ -599,7 +462,7 @@ export const deployUpgradePayload = async (
   deployer: L1Deployer,
   addresses: Pick<L1ContractAddresses, 'registryAddress' | 'rollupAddress'>,
 ) => {
-  const payloadAddress = await deployer.deploy(l1Artifacts.registerNewRollupVersionPayload, [
+  const payloadAddress = await deployer.deploy(RegisterNewRollupVersionPayloadArtifact, [
     addresses.registryAddress.toString(),
     addresses.rollupAddress.toString(),
   ]);
@@ -677,7 +540,7 @@ export const deployRollup = async (
     rollupConfigArgs,
   ];
 
-  const rollupAddress = await deployer.deploy(l1Artifacts.rollup, rollupArgs);
+  const rollupAddress = await deployer.deploy(RollupArtifact, rollupArgs);
   logger.verbose(`Deployed Rollup at ${rollupAddress}`, rollupConfigArgs);
 
   const rollupContract = new RollupContract(extendedClient, rollupAddress);
@@ -692,7 +555,7 @@ export const deployRollup = async (
     const { txHash: mintTxHash } = await deployer.sendTransaction({
       to: addresses.feeJuiceAddress.toString(),
       data: encodeFunctionData({
-        abi: l1Artifacts.feeAsset.contractAbi,
+        abi: FeeAssetArtifact.contractAbi,
         functionName: 'mint',
         args: [feeJuicePortalAddress.toString(), args.feeJuicePortalInitialBalance],
       }),
@@ -703,13 +566,13 @@ export const deployRollup = async (
     txHashes.push(mintTxHash);
   }
 
-  const slashFactoryAddress = await deployer.deploy(l1Artifacts.slashFactory, [rollupAddress.toString()]);
+  const slashFactoryAddress = await deployer.deploy(SlashFactoryArtifact, [rollupAddress.toString()]);
   logger.verbose(`Deployed SlashFactory at ${slashFactoryAddress}`);
 
   // We need to call a function on the registry to set the various contract addresses.
   const registryContract = getContract({
     address: getAddress(addresses.registryAddress.toString()),
-    abi: l1Artifacts.registry.contractAbi,
+    abi: RegistryArtifact.contractAbi,
     client: extendedClient,
   });
 
@@ -723,7 +586,7 @@ export const deployRollup = async (
       const { txHash: addRollupTxHash } = await deployer.sendTransaction({
         to: addresses.registryAddress.toString(),
         data: encodeFunctionData({
-          abi: l1Artifacts.registry.contractAbi,
+          abi: RegistryArtifact.contractAbi,
           functionName: 'addRollup',
           args: [getAddress(rollupContract.address)],
         }),
@@ -741,7 +604,7 @@ export const deployRollup = async (
   // We need to call a function on the registry to set the various contract addresses.
   const gseContract = getContract({
     address: getAddress(addresses.gseAddress.toString()),
-    abi: l1Artifacts.gse.contractAbi,
+    abi: GSEArtifact.contractAbi,
     client: extendedClient,
   });
   if ((await gseContract.read.owner()) === getAddress(extendedClient.account.address)) {
@@ -749,7 +612,7 @@ export const deployRollup = async (
       const { txHash: addRollupTxHash } = await deployer.sendTransaction({
         to: addresses.gseAddress.toString(),
         data: encodeFunctionData({
-          abi: l1Artifacts.gse.contractAbi,
+          abi: GSEArtifact.contractAbi,
           functionName: 'addRollup',
           args: [getAddress(rollupContract.address)],
         }),
@@ -796,13 +659,13 @@ export const handoverToGovernance = async (
   // We need to call a function on the registry to set the various contract addresses.
   const registryContract = getContract({
     address: getAddress(registryAddress.toString()),
-    abi: l1Artifacts.registry.contractAbi,
+    abi: RegistryArtifact.contractAbi,
     client: extendedClient,
   });
 
   const gseContract = getContract({
     address: getAddress(gseAddress.toString()),
-    abi: l1Artifacts.gse.contractAbi,
+    abi: GSEArtifact.contractAbi,
     client: extendedClient,
   });
 
@@ -817,7 +680,7 @@ export const handoverToGovernance = async (
     const { txHash: transferOwnershipTxHash } = await deployer.sendTransaction({
       to: registryAddress.toString(),
       data: encodeFunctionData({
-        abi: l1Artifacts.registry.contractAbi,
+        abi: RegistryArtifact.contractAbi,
         functionName: 'transferOwnership',
         args: [getAddress(governanceAddress.toString())],
       }),
@@ -834,7 +697,7 @@ export const handoverToGovernance = async (
     const { txHash: transferOwnershipTxHash } = await deployer.sendTransaction({
       to: gseContract.address,
       data: encodeFunctionData({
-        abi: l1Artifacts.gse.contractAbi,
+        abi: GSEArtifact.contractAbi,
         functionName: 'transferOwnership',
         args: [getAddress(governanceAddress.toString())],
       }),
@@ -894,10 +757,7 @@ export const addMultipleValidators = async (
     }
 
     if (validators.length > 0) {
-      const multiAdder = await deployer.deploy(l1Artifacts.multiAdder, [
-        rollupAddress,
-        deployer.client.account.address,
-      ]);
+      const multiAdder = await deployer.deploy(MultiAdderArtifact, [rollupAddress, deployer.client.account.address]);
 
       const validatorsTuples = validators.map(v => ({
         attester: getAddress(v.attester.toString()),
@@ -909,7 +769,7 @@ export const addMultipleValidators = async (
       const { txHash } = await deployer.sendTransaction({
         to: stakingAssetAddress,
         data: encodeFunctionData({
-          abi: l1Artifacts.stakingAsset.contractAbi,
+          abi: StakingAssetArtifact.contractAbi,
           functionName: 'mint',
           args: [multiAdder.toString(), stakeNeeded],
         }),
@@ -922,7 +782,7 @@ export const addMultipleValidators = async (
 
       const addValidatorsTxHash = await deployer.client.writeContract({
         address: multiAdder.toString(),
-        abi: l1Artifacts.multiAdder.contractAbi,
+        abi: MultiAdderArtifact.contractAbi,
         functionName: 'addValidators',
         args: [validatorsTuples],
       });
@@ -954,7 +814,7 @@ export const cheat_initializeFeeAssetHandler = async (
   feeAssetHandlerAddress: EthAddress;
   txHash: Hex;
 }> => {
-  const feeAssetHandlerAddress = await deployer.deploy(l1Artifacts.feeAssetHandler, [
+  const feeAssetHandlerAddress = await deployer.deploy(FeeAssetHandlerArtifact, [
     extendedClient.account.address,
     feeAssetAddress.toString(),
     BigInt(1e18),
@@ -964,7 +824,7 @@ export const cheat_initializeFeeAssetHandler = async (
   const { txHash } = await deployer.sendTransaction({
     to: feeAssetAddress.toString(),
     data: encodeFunctionData({
-      abi: l1Artifacts.feeAsset.contractAbi,
+      abi: FeeAssetArtifact.contractAbi,
       functionName: 'addMinter',
       args: [feeAssetHandlerAddress.toString()],
     }),
